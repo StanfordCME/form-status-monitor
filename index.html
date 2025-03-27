@@ -1,0 +1,15 @@
+<script>
+    fetch("/.netlify/functions/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.formStatus === "down") {
+        alert("Some forms are down!");
+      }
+    })
+    .catch(console.error);
+    </script>
+    
