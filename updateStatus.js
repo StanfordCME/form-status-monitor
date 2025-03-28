@@ -5,7 +5,7 @@ const path = require('path');
 // Replace with your actual API key
 const API_KEY = 'u2692690-969f436ddd671a867777045e';
 
-const STATUS_FILE = path.join(__dirname, 'status.json');
+const STATUS_FILE = path.join(__dirname, 'docs', 'status.json');
 
 async function updateStatus() {
   try {
