@@ -24,8 +24,7 @@ fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://shehry
           text-align: center;
           font-family: sans-serif;
         `;
-
-        // Check the status of both forms
+// Check the status of both forms
         const contactFormUp = jsonData.allForms.some(form => form.name === "Contact Form" && form.status === "up");
         const registrationFormUp = jsonData.allForms.some(form => form.name === "Registration Form" && form.status === "up");
 
@@ -38,6 +37,7 @@ fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://shehry
           banner.style.backgroundColor = "#ffdddd";
           banner.style.color = "#a00";
         }
+
 
         const formDetails = document.createElement("ul");
         jsonData.allForms.forEach(form => {
