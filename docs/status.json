@@ -1,5 +1,15 @@
 {
-  "formStatus": "up",
+  "formStatus": "up",  // Or "down" if any form is down
   "message": "",
-  "downForms": []
+  "downForms": [],  // List of forms that are down, if any
+  "allForms": [
+    {
+      "name": "Contact Form",  // Friendly name of the form
+      "status": "up"  // "up" or "down"
+    },
+    {
+      "name": "Registration Form",
+      "status": "down"
+    }
+  ]
 }
