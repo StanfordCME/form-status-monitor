@@ -9,49 +9,68 @@
   <h1>Form Status</h1>
 
   <script>
-    // Fetch the JSON data directly from the same repository (no CORS needed)
-   fetch("https://shehryartariq1.github.io/form-status-monitor/status.json")
-  .then(res => res.json())
+
+    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://shehryartariq1.github.io/form-status-monitor/status.json"))
+  .then(res => {
+    if (!res.ok) {
+      console.error(`HTTP error! status: ${res.status}`);
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
   .then(data => {
-    console.log("Fetched data:", data);  // Log the entire response object
-    if (!data || !data.allForms) {
-      alert("Error: 'allForms' is missing in the response.");
-      return;
-    }
+    if (data && data.contents) {
+      try {
+        const jsonData = JSON.parse(data.contents);
+        console.log("Fetched data:", jsonData);
 
-    const banner = document.createElement("div");
-    banner.style.cssText = `
-      padding: 12px;
-      font-weight: bold;
-      text-align: center;
-      font-family: sans-serif;
-    `;
+        if (!jsonData) {
+          alert("Error: Parsed data is empty.");
+          return;
+        }
 
-    if (data.formStatus === "down") {
-      banner.textContent = "⚠️ Some forms are temporarily unavailable.";
-      banner.style.backgroundColor = "#ffdddd";
-      banner.style.color = "#a00";
+        const banner = document.createElement("div");
+        banner.style.cssText = `
+          padding: 12px;
+          font-weight: bold;
+          text-align: center;
+          font-family: sans-serif;
+        `;
+
+        if (jsonData.formStatus === "down") {
+          banner.textContent = "⚠️ Some forms are temporarily unavailable.";
+          banner.style.backgroundColor = "#ffdddd";
+          banner.style.color = "#a00";
+        } else {
+          banner.textContent = "✅ All forms are currently working.";
+          banner.style.backgroundColor = "#e6ffea";
+          banner.style.color = "#007b33";
+        }
+
+        const formDetails = document.createElement("ul");
+        jsonData.allForms.forEach(form => {
+          const li = document.createElement("li");
+          li.textContent = `${form.name}: ${form.status === "up" ? "✅ Up" : "⚠️ Down"}`;
+          formDetails.appendChild(li);
+        });
+
+        document.body.prepend(banner);
+        document.body.appendChild(formDetails);
+
+      } catch (parseError) {
+        console.error("Error parsing JSON content:", parseError, data.contents);
+        alert("Error parsing the fetched data.");
+      }
     } else {
-      banner.textContent = "✅ All forms are currently working.";
-      banner.style.backgroundColor = "#e6ffea";
-      banner.style.color = "#007b33";
+      console.error("Error: Invalid response structure from CORS proxy:", data);
+      alert("Error: Could not retrieve data from the server.");
     }
-
-    const formDetails = document.createElement("ul");
-    data.allForms.forEach(form => {
-      const li = document.createElement("li");
-      li.textContent = `${form.name}: ${form.status === "up" ? "✅ Up" : "⚠️ Down"}`;
-      formDetails.appendChild(li);
-    });
-
-    document.body.prepend(banner);
-    document.body.appendChild(formDetails);
   })
   .catch(error => {
     console.error("Error fetching form status:", error);
     alert("There was an error fetching the form status.");
   });
-
+   
   </script>
 </body>
 </html>
