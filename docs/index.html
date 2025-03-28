@@ -10,46 +10,48 @@
 
   <script>
     // Fetch the JSON data directly from the same repository (no CORS needed)
-    fetch("status.json")
-      .then(res => res.json())
-      .then(data => {
-        if (!data) {
-          alert("Error: No data available.");
-          return;
-        }
+   fetch("https://shehryartariq1.github.io/form-status-monitor/status.json")
+  .then(res => res.json())
+  .then(data => {
+    console.log("Fetched data:", data);  // Log the entire response object
+    if (!data || !data.allForms) {
+      alert("Error: 'allForms' is missing in the response.");
+      return;
+    }
 
-        const banner = document.createElement("div");
-        banner.style.cssText = `
-          padding: 12px;
-          font-weight: bold;
-          text-align: center;
-          font-family: sans-serif;
-        `;
+    const banner = document.createElement("div");
+    banner.style.cssText = `
+      padding: 12px;
+      font-weight: bold;
+      text-align: center;
+      font-family: sans-serif;
+    `;
 
-        if (data.formStatus === "down") {
-          banner.textContent = "⚠️ Some forms are temporarily unavailable.";
-          banner.style.backgroundColor = "#ffdddd";
-          banner.style.color = "#a00";
-        } else {
-          banner.textContent = "✅ All forms are currently working.";
-          banner.style.backgroundColor = "#e6ffea";
-          banner.style.color = "#007b33";
-        }
+    if (data.formStatus === "down") {
+      banner.textContent = "⚠️ Some forms are temporarily unavailable.";
+      banner.style.backgroundColor = "#ffdddd";
+      banner.style.color = "#a00";
+    } else {
+      banner.textContent = "✅ All forms are currently working.";
+      banner.style.backgroundColor = "#e6ffea";
+      banner.style.color = "#007b33";
+    }
 
-        const formDetails = document.createElement("ul");
-        data.allForms.forEach(form => {
-          const li = document.createElement("li");
-          li.textContent = `${form.name}: ${form.status === "up" ? "✅ Up" : "⚠️ Down"}`;
-          formDetails.appendChild(li);
-        });
+    const formDetails = document.createElement("ul");
+    data.allForms.forEach(form => {
+      const li = document.createElement("li");
+      li.textContent = `${form.name}: ${form.status === "up" ? "✅ Up" : "⚠️ Down"}`;
+      formDetails.appendChild(li);
+    });
 
-        document.body.prepend(banner);
-        document.body.appendChild(formDetails);
-      })
-      .catch(error => {
-        console.error("Error fetching form status:", error);
-        alert("There was an error fetching the form status.");
-      });
+    document.body.prepend(banner);
+    document.body.appendChild(formDetails);
+  })
+  .catch(error => {
+    console.error("Error fetching form status:", error);
+    alert("There was an error fetching the form status.");
+  });
+
   </script>
 </body>
 </html>
