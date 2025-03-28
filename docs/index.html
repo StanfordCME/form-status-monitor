@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Status</title>
-</head>
-<body>
-  <h1>Form Status</h1>
-
-  <script>
-
-    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://shehryartariq1.github.io/form-status-monitor/status.json"))
+fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://shehryartariq1.github.io/form-status-monitor/status.json"))
   .then(res => {
     if (!res.ok) {
       console.error(`HTTP error! status: ${res.status}`);
@@ -24,8 +12,8 @@
         const jsonData = JSON.parse(data.contents);
         console.log("Fetched data:", jsonData);
 
-        if (!jsonData) {
-          alert("Error: Parsed data is empty.");
+        if (!jsonData || !jsonData.allForms || jsonData.allForms.length === 0) {
+          alert("Error: No form data available.");
           return;
         }
 
@@ -37,14 +25,18 @@
           font-family: sans-serif;
         `;
 
-        if (jsonData.formStatus === "down") {
-          banner.textContent = "⚠️ Some forms are temporarily unavailable.";
-          banner.style.backgroundColor = "#ffdddd";
-          banner.style.color = "#a00";
-        } else {
+        // Check the status of both forms
+        const contactFormUp = jsonData.allForms.some(form => form.name === "Contact Form" && form.status === "up");
+        const registrationFormUp = jsonData.allForms.some(form => form.name === "Registration Form" && form.status === "up");
+
+        if (contactFormUp && registrationFormUp) {
           banner.textContent = "✅ All forms are currently working.";
           banner.style.backgroundColor = "#e6ffea";
           banner.style.color = "#007b33";
+        } else {
+          banner.textContent = "⚠️ Some forms are temporarily unavailable.";
+          banner.style.backgroundColor = "#ffdddd";
+          banner.style.color = "#a00";
         }
 
         const formDetails = document.createElement("ul");
@@ -70,7 +62,3 @@
     console.error("Error fetching form status:", error);
     alert("There was an error fetching the form status.");
   });
-   
-  </script>
-</body>
-</html>
