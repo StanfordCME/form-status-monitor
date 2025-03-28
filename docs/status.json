@@ -1,15 +1,5 @@
 {
   "formStatus": "up",
   "message": "",
-  "downForms": [],
-  "allForms": [
-    {
-      "name": "Contact Form",
-      "status": "up"
-    },
-    {
-      "name": "Registration Form",
-      "status": "down"
-    }
-  ]
+  "downForms": []
 }
