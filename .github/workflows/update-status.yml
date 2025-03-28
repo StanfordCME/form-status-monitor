@@ -1,8 +1,9 @@
-name: Update status.json
+name: Update Status and Deploy Pages
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # Every 5 minutes
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 jobs:
   update-status:
@@ -28,6 +29,42 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add docs/status.json # Or just status.json if it's in the root
+          git add docs/status.json # Or the correct path to your status.json
           git commit -m "Auto-update status.json" || echo "No changes"
           git push origin ${{ github.ref_name }}
+
+  pages:
+    needs: update-status # Ensure status is updated before building/deploying
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Build with Jekyll
+        run: |
+          cd ./ # If your Jekyll source is at the root
+          bundle install
+          bundle exec jekyll build --destination ./_site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    needs: pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
