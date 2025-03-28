@@ -17,15 +17,17 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install node-fetch # Make sure this is in your package.json
 
       - name: Run updateStatus.js
+        env:
+          UPTIME_ROBOT_API_KEY: u2692690-656fe82844ad7140e68896c1
         run: node updateStatus.js
 
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add status.json
+          git add docs/status.json # Or just status.json if it's in the root
           git commit -m "Auto-update status.json" || echo "No changes"
-          git push
+          git push origin ${{ github.ref_name }}
