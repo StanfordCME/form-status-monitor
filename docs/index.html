@@ -59,18 +59,30 @@
     }
 
     function updateDisplay(data) {
-      const banner = document.getElementById('status-banner');
-      if (data.formStatus === 'up') {
-        banner.textContent = '✅ All forms are currently working.';
-        banner.className = 'up';
-      } else if (data.formStatus === 'down') {
-        banner.textContent = '⚠️ Some forms are temporarily unavailable.';
-        banner.className = 'down';
-      } else {
-        banner.textContent = 'Status: ' + data.formStatus;
-        banner.className = 'loading'; // Or another appropriate class
+    const banner = document.getElementById('status-banner');
+    const body = document.body; // Get the body element
+
+    if (data.formStatus === 'up') {
+      // Make the body empty and remove any background styles
+      body.innerHTML = '';
+      body.style.backgroundColor = '';
+      body.style.color = ''; // Reset text color if needed
+    } else if (data.formStatus === 'down') {
+      banner.textContent = '⚠️ Some forms are temporarily unavailable.';
+      banner.className = 'down';
+      // Ensure the body content is visible if it was previously blank
+      if (body.innerHTML === '') {
+        body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
+      }
+    } else {
+      banner.textContent = 'Status: ' + data.formStatus;
+      banner.className = 'loading';
+      // Ensure the body content is visible if it was previously blank
+      if (body.innerHTML === '') {
+        body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
       }
     }
+  }
 
     // Fetch status on page load
     fetchStatus();
