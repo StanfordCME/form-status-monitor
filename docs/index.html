@@ -58,31 +58,31 @@
       }
     }
 
-    function updateDisplay(data) {
-    const banner = document.getElementById('status-banner');
-    const body = document.body; // Get the body element
+function updateDisplay(data) {
+  const banner = document.getElementById('status-banner');
+  const body = document.body;
 
-    if (data.formStatus === 'up') {
-      // Make the body empty and remove any background styles
-      body.innerHTML = '';
-      body.style.backgroundColor = '';
-      body.style.color = ''; // Reset text color if needed
-    } else if (data.formStatus === 'down') {
-      banner.textContent = '⚠️ Some forms are temporarily unavailable.';
-      banner.className = 'down';
-      // Ensure the body content is visible if it was previously blank
-      if (body.innerHTML === '') {
-        body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
-      }
-    } else {
-      banner.textContent = 'Status: ' + data.formStatus;
-      banner.className = 'loading';
-      // Ensure the body content is visible if it was previously blank
-      if (body.innerHTML === '') {
-        body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
-      }
+  if (data.formStatus === 'up') {
+    body.innerHTML = '';
+    // Tell AEM to set iframe height to 0
+    window.parent.postMessage(0, '*');
+  } else if (data.formStatus === 'down') {
+    banner.textContent = '⚠️ Some forms are temporarily unavailable.';
+    banner.className = 'down';
+    if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
+      body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
     }
+    // Send actual content height
+    window.parent.postMessage(document.body.scrollHeight, '*');
+  } else {
+    banner.textContent = 'Status: ' + data.formStatus;
+    banner.className = 'loading';
+    if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
+      body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
+    }
+    window.parent.postMessage(document.body.scrollHeight, '*');
   }
+}
 
     // Fetch status on page load
     fetchStatus();
