@@ -37,14 +37,13 @@
   </style>
 </head>
 <body>
-  <h1>Form Status</h1>
 
   <div id="status-banner" class="loading">Checking Status...</div>
 
   <script>
     async function fetchStatus() {
       try {
-        const response = await fetch('./status.json'); // Assuming status.json is in the same directory
+        const response = await fetch('./status.json');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -58,37 +57,32 @@
       }
     }
 
-function updateDisplay(data) {
-  const banner = document.getElementById('status-banner');
-  const body = document.body;
+    function updateDisplay(data) {
+      const banner = document.getElementById('status-banner');
+      const body = document.body;
 
-  if (data.formStatus === 'up') {
-    body.innerHTML = '';
-    // Tell AEM to set iframe height to 0
-    window.parent.postMessage(0, '*');
-  } else if (data.formStatus === 'down') {
-    banner.textContent = '⚠️ Some forms are temporarily unavailable.';
-    banner.className = 'down';
-    if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
-      body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
+      if (data.formStatus === 'up') {
+        body.innerHTML = '';
+        window.parent.postMessage(0, '*');
+      } else if (data.formStatus === 'down') {
+        banner.textContent = '⚠️ Some forms are temporarily unavailable.';
+        banner.className = 'down';
+        if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
+          body.innerHTML = '<div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
+        }
+        window.parent.postMessage(document.body.scrollHeight, '*');
+      } else {
+        banner.textContent = 'Status: ' + data.formStatus;
+        banner.className = 'loading';
+        if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
+          body.innerHTML = '<div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
+        }
+        window.parent.postMessage(document.body.scrollHeight, '*');
+      }
     }
-    // Send actual content height
-    window.parent.postMessage(document.body.scrollHeight, '*');
-  } else {
-    banner.textContent = 'Status: ' + data.formStatus;
-    banner.className = 'loading';
-    if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
-      body.innerHTML = '<h1>Form Status</h1><div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
-    }
-    window.parent.postMessage(document.body.scrollHeight, '*');
-  }
-}
 
-    // Fetch status on page load
     fetchStatus();
-
-    // Optionally, refresh status every few seconds
-    // setInterval(fetchStatus, 5000); // Fetch every 5 seconds
   </script>
 </body>
 </html>
+
