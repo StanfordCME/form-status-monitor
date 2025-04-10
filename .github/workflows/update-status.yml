@@ -22,7 +22,7 @@ jobs:
 
       - name: Run updateStatus.js
         env:
-          UPTIME_ROBOT_API_KEY: u2692690-656fe82844ad7140e68896c1
+          UPTIME_ROBOT_API_KEY: u2692690-969f436ddd671a867777045e
         run: node updateStatus.js
 
       - name: Commit and push changes
