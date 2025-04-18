@@ -21,15 +21,15 @@
       overflow: hidden;
     }
     .header {
-      background-color: #f28c38;
+      background-color: rgba(255,87,51,255);
       color: white;
       padding: 10px 20px;
       font-size: 1.2em;
       font-weight: bold;
-      text-align: center;
+      text-align: left;
     }
     .content {
-      background-color: #fffde7;
+      background-color: rgba(255,87,51,255);
       color: #333;
       padding: 20px;
       font-size: 1em;
@@ -41,6 +41,9 @@
     .content ul {
       margin: 10px 0;
       padding-left: 20px;
+    }
+    .content .bold {
+      font-weight: bold;
     }
     .loading {
       background-color: #f0f8ff;
@@ -59,7 +62,7 @@
   <script>
     function getCurrentDate() {
       const today = new Date();
-      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+      const month = String(today.getMonth() + 1).padStart(2, '0');
       const day = String(today.getDate()).padStart(2, '0');
       const year = today.getFullYear();
       return `${month}/${day}/${year}`;
@@ -101,7 +104,7 @@
           <div class="content">
             <p>We regret to inform you that our website is currently experiencing technical difficulties with registrations, evaluations and claiming credit. We apologize for any inconvenience this may cause.</p>
             <p>For free activities, we kindly ask you to try the registration process again later.</p>
-            <p>If you wish to register for an activity that requires payment, please follow the steps below:</p>
+            <p class="bold">If you wish to register for an activity that requires payment, please follow the steps below:</p>
             <p>Send an email to <a href="mailto:stanfordcme@stanford.edu?subject=Paid Activity Registration Request">stanfordcme@stanford.edu</a> with the subject line: “Paid Activity Registration Request.”</p>
             <p>In the email, include the following details:</p>
             <ul>
