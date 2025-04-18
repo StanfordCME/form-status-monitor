@@ -10,37 +10,61 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 50px;
+      margin: 0;
+      padding: 0;
     }
     #status-banner {
-      padding: 15px 30px;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #f28c38;
+      color: white;
+      padding: 10px 20px;
       font-size: 1.2em;
       font-weight: bold;
-      border-radius: 5px;
-      margin-bottom: 20px;
+      text-align: center;
     }
-    .up {
-      background-color: #e6ffea;
-      color: #007b33;
-      border: 1px solid #b3e0b3;
+    .content {
+      background-color: #fffde7;
+      color: #333;
+      padding: 20px;
+      font-size: 1em;
+      line-height: 1.5;
     }
-    .down {
-      background-color: #ffdddd;
-      color: #a00;
-      border: 1px solid #e0b3b3;
+    .content p {
+      margin: 10px 0;
+    }
+    .content ul {
+      margin: 10px 0;
+      padding-left: 20px;
     }
     .loading {
       background-color: #f0f8ff;
       color: #1e90ff;
       border: 1px solid #add8e6;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-
   <div id="status-banner" class="loading">Checking Status...</div>
 
   <script>
+    function getCurrentDate() {
+      const today = new Date();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+      const day = String(today.getDate()).padStart(2, '0');
+      const year = today.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
+
     async function fetchStatus() {
       try {
         const response = await fetch('./status.json');
@@ -52,10 +76,16 @@
       } catch (error) {
         console.error('Error fetching status:', error);
         const banner = document.getElementById('status-banner');
-        banner.textContent = 'Error fetching status.';
-        banner.className = 'down';
+        banner.innerHTML = `
+          <div class="header">Update ${getCurrentDate()}</div>
+          <div class="content">
+            <p>We regret to inform you that our website is currently experiencing technical difficulties with registrations, evaluations and claiming credit. We apologize for any inconvenience this may cause.</p>
+            <p>We apologize for any inconvenience and thank you for your patience.</p>
+          </div>
+        `;
+        banner.className = '';
+        window.parent.postMessage(document.body.scrollHeight, '*');
       }
-      
     }
 
     function updateDisplay(data) {
@@ -66,14 +96,32 @@
         body.innerHTML = '';
         window.parent.postMessage(0, '*');
       } else if (data.formStatus === 'down') {
-        banner.textContent = '⚠️ Some forms are temporarily unavailable.';
-        banner.className = 'down';
+        banner.innerHTML = `
+          <div class="header">Update ${getCurrentDate()}</div>
+          <div class="content">
+            <p>We regret to inform you that our website is currently experiencing technical difficulties with registrations, evaluations and claiming credit. We apologize for any inconvenience this may cause.</p>
+            <p>For free activities, we kindly ask you to try the registration process again later.</p>
+            <p>If you wish to register for an activity that requires payment, please follow the steps below:</p>
+            <p>Send an email to <a href="mailto:stanfordcme@stanford.edu?subject=Paid Activity Registration Request">stanfordcme@stanford.edu</a> with the subject line: “Paid Activity Registration Request.”</p>
+            <p>In the email, include the following details:</p>
+            <ul>
+              <li>Your full name</li>
+              <li>Contact Information</li>
+              <li>The name and date of the activity you wish to register for</li>
+              <li>The registration type, e.g. Physician / Industry / AHP</li>
+            </ul>
+            <p>Once we receive your email, our team will process your registration and provide you with the link for payment. We appreciate your understanding as we work diligently to resolve this issue.</p>
+            <p>We apologize for any inconvenience and thank you for your patience.</p>
+          </div>
+        `;
+        banner.className = '';
         if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
-          body.innerHTML = '<div id="status-banner" class="down">⚠️ Some forms are temporarily unavailable.</div>';
+          body.innerHTML = '<div id="status-banner"></div>';
+          body.querySelector('#status-banner').innerHTML = banner.innerHTML;
         }
         window.parent.postMessage(document.body.scrollHeight, '*');
       } else {
-        banner.textContent = 'Status: ' + data.formStatus;
+        banner.innerHTML = `<div class="loading">Status: ${data.formStatus}</div>`;
         banner.className = 'loading';
         if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
           body.innerHTML = '<div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
@@ -86,4 +134,3 @@
   </script>
 </body>
 </html>
-
