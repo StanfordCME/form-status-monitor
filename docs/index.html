@@ -68,6 +68,13 @@
       return `${month}/${day}/${year}`;
     }
 
+    function sendHeight() {
+      const banner = document.getElementById('status-banner');
+      if (banner) {
+        window.parent.postMessage(banner.scrollHeight, '*');
+      }
+    }
+
     async function fetchStatus() {
       try {
         const response = await fetch('./status.json');
@@ -87,10 +94,7 @@
           </div>
         `;
         banner.className = '';
-        setTimeout(() => {
-      window.parent.postMessage(document.body.scrollHeight, '*');
-      }, 100);
-
+        setTimeout(sendHeight, 100);
       }
     }
 
@@ -125,20 +129,14 @@
           body.innerHTML = '<div id="status-banner"></div>';
           body.querySelector('#status-banner').innerHTML = banner.innerHTML;
         }
-        setTimeout(() => {
-  window.parent.postMessage(document.body.scrollHeight, '*');
-}, 100);
-
+        setTimeout(sendHeight, 100);
       } else {
         banner.innerHTML = `<div class="loading">Status: ${data.formStatus}</div>`;
         banner.className = 'loading';
         if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
           body.innerHTML = '<div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
         }
-       setTimeout(() => {
-      window.parent.postMessage(document.body.scrollHeight, '*');
-      }, 100);
-
+        setTimeout(sendHeight, 100);
       }
     }
 
