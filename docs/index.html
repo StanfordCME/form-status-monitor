@@ -12,6 +12,7 @@
       align-items: center;
       margin: 0;
       padding: 0;
+      overflow: hidden; /* Prevent internal scrolling */
     }
     #status-banner {
       width: 100%;
@@ -60,6 +61,13 @@
   <div id="status-banner" class="loading">Checking Status...</div>
 
   <script>
+    // Function to send the current height to the parent
+    function sendHeight() {
+      const height = Math.max(document.body.scrollHeight, document.body.offsetHeight);
+      window.parent.postMessage(height, '*');
+    }
+
+    // Get current date
     function getCurrentDate() {
       const today = new Date();
       const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -68,13 +76,7 @@
       return `${month}/${day}/${year}`;
     }
 
-    function sendHeight() {
-      const banner = document.getElementById('status-banner');
-      if (banner) {
-        window.parent.postMessage(banner.scrollHeight, '*');
-      }
-    }
-
+    // Fetch status and update display
     async function fetchStatus() {
       try {
         const response = await fetch('./status.json');
@@ -94,17 +96,19 @@
           </div>
         `;
         banner.className = '';
-        setTimeout(sendHeight, 100);
+        sendHeight(); // Send height after updating content
       }
     }
 
+    // Update display based on status
     function updateDisplay(data) {
       const banner = document.getElementById('status-banner');
       const body = document.body;
 
       if (data.formStatus === 'up') {
-        body.innerHTML = '';
-        window.parent.postMessage(0, '*');
+        banner.innerHTML = ''; // Clear banner content
+        banner.className = '';
+        sendHeight(); // Send height (will be small but non-zero due to body)
       } else if (data.formStatus === 'down') {
         banner.innerHTML = `
           <div class="header">Update ${getCurrentDate()}</div>
@@ -125,21 +129,23 @@
           </div>
         `;
         banner.className = '';
-        if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
-          body.innerHTML = '<div id="status-banner"></div>';
-          body.querySelector('#status-banner').innerHTML = banner.innerHTML;
-        }
-        setTimeout(sendHeight, 100);
+        sendHeight(); // Send height after updating content
       } else {
         banner.innerHTML = `<div class="loading">Status: ${data.formStatus}</div>`;
         banner.className = 'loading';
-        if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
-          body.innerHTML = '<div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
-        }
-        setTimeout(sendHeight, 100);
+        sendHeight(); // Send height after updating content
       }
     }
 
+    // Send height on load, resize, and content changes
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+
+    // Monitor DOM changes
+    const observer = new MutationObserver(sendHeight);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial fetch
     fetchStatus();
   </script>
 </body>
