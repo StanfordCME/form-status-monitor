@@ -87,7 +87,10 @@
           </div>
         `;
         banner.className = '';
-        window.parent.postMessage(document.body.scrollHeight, '*');
+        setTimeout(() => {
+      window.parent.postMessage(document.body.scrollHeight, '*');
+      }, 100);
+
       }
     }
 
@@ -129,7 +132,10 @@
         if (body.innerHTML === '' || body.querySelector('#status-banner') === null) {
           body.innerHTML = '<div id="status-banner" class="loading">Status: ' + data.formStatus + '</div>';
         }
-        window.parent.postMessage(document.body.scrollHeight, '*');
+       setTimeout(() => {
+      window.parent.postMessage(document.body.scrollHeight, '*');
+      }, 100);
+
       }
     }
 
