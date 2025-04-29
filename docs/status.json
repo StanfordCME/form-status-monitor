@@ -2,6 +2,8 @@
   "formStatus": "down",
   "message": "One or more forms are temporarily unavailable.",
   "downForms": [
-    "example.com/fake-form-test"
+    "example.com/fake-form-test",
+    "stanford.cloud-cme.com/cme/EvalsAndCerts?FormID=1916&EventID=49583&P=200",
+    "stanford.cloud-cme.com/Form.aspx?FormID=35"
   ]
 }
