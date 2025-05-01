@@ -7,20 +7,18 @@
   <style>
     body {
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       margin: 0;
       padding: 0;
-      overflow: hidden; /* Prevent internal scrolling */
-    }
-    #status-banner {
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto;
-      border-radius: 5px;
       overflow: hidden;
     }
+
+    #status-banner {
+      width: 100%;
+      margin: 0;
+      background-color: rgba(255,253,208,255); /* Yellow background now here */
+      border-radius: 0;
+    }
+
     .header {
       background-color: rgba(255,87,51,255);
       color: white;
@@ -29,23 +27,27 @@
       font-weight: bold;
       text-align: left;
     }
+
     .content {
-      background-color: rgba(255,253,208,255);
-      color: #000;
-      padding: 20px 20px 20px 0; /* top, right, bottom, left */
+      padding: 20px;
       font-size: 1em;
       line-height: 1.5;
+      color: #000;
     }
+
     .content p {
       margin: 10px 0;
     }
+
     .content ul {
       margin: 10px 0;
       padding-left: 20px;
     }
+
     .content .bold {
       font-weight: bold;
     }
+
     .loading {
       background-color: #f0f8ff;
       color: #1e90ff;
@@ -61,13 +63,11 @@
   <div id="status-banner" class="loading">Checking Status...</div>
 
   <script>
-    // Function to send the current height to the parent
     function sendHeight() {
       const height = Math.max(document.body.scrollHeight, document.body.offsetHeight);
       window.parent.postMessage(height, '*');
     }
 
-    // Get current date
     function getCurrentDate() {
       const today = new Date();
       const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -76,13 +76,10 @@
       return `${month}/${day}/${year}`;
     }
 
-    // Fetch status and update display
     async function fetchStatus() {
       try {
         const response = await fetch('./status.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         updateDisplay(data);
       } catch (error) {
@@ -96,19 +93,17 @@
           </div>
         `;
         banner.className = '';
-        sendHeight(); // Send height after updating content
+        sendHeight();
       }
     }
 
-    // Update display based on status
     function updateDisplay(data) {
       const banner = document.getElementById('status-banner');
-      const body = document.body;
 
       if (data.formStatus === 'up') {
-        banner.innerHTML = ''; // Clear banner content
+        banner.innerHTML = '';
         banner.className = '';
-        sendHeight(); // Send height (will be small but non-zero due to body)
+        sendHeight();
       } else if (data.formStatus === 'down') {
         banner.innerHTML = `
           <div class="header">Update ${getCurrentDate()}</div>
@@ -129,23 +124,20 @@
           </div>
         `;
         banner.className = '';
-        sendHeight(); // Send height after updating content
+        sendHeight();
       } else {
         banner.innerHTML = `<div class="loading">Status: ${data.formStatus}</div>`;
         banner.className = 'loading';
-        sendHeight(); // Send height after updating content
+        sendHeight();
       }
     }
 
-    // Send height on load, resize, and content changes
     window.addEventListener('load', sendHeight);
     window.addEventListener('resize', sendHeight);
 
-    // Monitor DOM changes
     const observer = new MutationObserver(sendHeight);
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Initial fetch
     fetchStatus();
   </script>
 </body>
