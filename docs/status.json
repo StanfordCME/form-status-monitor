@@ -1,9 +1,5 @@
 {
-  "formStatus": "down",
-  "message": "One or more forms are temporarily unavailable.",
-  "downForms": [
-    "stanford.cloud-cme.com/cme/EvalsAndCerts?FormID=1916&EventID=49583&P=200",
-    "stanford.cloud-cme.com/Form.aspx?FormID=34",
-    "stanford.cloud-cme.com/Form.aspx?FormID=35"
-  ]
+  "formStatus": "up",
+  "message": "",
+  "downForms": []
 }
