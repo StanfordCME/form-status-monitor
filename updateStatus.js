@@ -33,7 +33,8 @@ async function updateStatus() {
       message: downForms.length > 0
         ? `One or more forms are temporarily unavailable.`
         : "",
-      downForms
+      downForms,
+      lastUpdated: new Date().toISOString()
     };
 
     fs.writeFileSync(STATUS_FILE, JSON.stringify(statusData, null, 2));
