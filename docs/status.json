@@ -2,7 +2,10 @@
   "formStatus": "down",
   "message": "One or more forms are temporarily unavailable.",
   "downForms": [
-    "fakeform.thisdoesnotexist.com"
+    "fakeform.thisdoesnotexist.com",
+    "stanford.cloud-cme.com/cme/EvalsAndCerts?FormID=1916&EventID=49583&P=200",
+    "stanford.cloud-cme.com/Form.aspx?FormID=34",
+    "stanford.cloud-cme.com/Form.aspx?FormID=35"
   ],
-  "lastUpdated": "2025-08-06T16:58:46.728Z"
+  "lastUpdated": "2025-08-06T17:29:30.657Z"
 }
