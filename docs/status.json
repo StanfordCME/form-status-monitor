@@ -1,8 +1,6 @@
 {
-  "formStatus": "down",
-  "message": "One or more forms are temporarily unavailable.",
-  "downForms": [
-    "fakeform.thisdoesnotexist.com"
-  ],
-  "lastUpdated": "2025-12-18T13:53:27.876Z"
+  "formStatus": "up",
+  "message": "",
+  "downForms": [],
+  "lastUpdated": "2025-12-18T14:17:39.250Z"
 }
