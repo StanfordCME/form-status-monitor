@@ -1,8 +1,6 @@
 {
-  "formStatus": "down",
-  "message": "One or more forms are temporarily unavailable.",
-  "downForms": [
-    "stanford.cloud-cme.com/cme/EvalsAndCerts?FormID=1916&EventID=49583&P=200"
-  ],
-  "lastUpdated": "2026-06-04T05:12:32.649Z"
+  "formStatus": "up",
+  "message": "",
+  "downForms": [],
+  "lastUpdated": "2026-06-04T09:01:59.680Z"
 }
